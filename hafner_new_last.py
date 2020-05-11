@@ -10,9 +10,17 @@ class YandexDiskOperations():
     def __init__(self):
         self.get_auth()
         print('n4')
+        self.dict_func = {'copy': self.copy, 'download': self.download, 'download_public': self.download_public,
+                          'mkdir': self.mkdir, 'move': self.move, 'listdir': self.listdir,
+                          'is_dir': self.is_dir, 'is_file': self.is_file, 'exists': self.exists, 'get_disk_info': self.get_disk_info,
+                          'get_files': self.get_files, 'get_last_uploaded': self.get_last_uploaded, 'get_meta': self.get_meta, 'get_public_meta': self.get_public_meta,'get_public_resourses': self.get_public_resourses,
+                          'get_public_type': self.get_public_type}
 
     def additional_func(self):
-        self.locals()[sys.argv[1]](sys.argv[2], sys.argv[3])
+        # print(locals())
+        print(sys.argv)
+        # locals()[sys.argv[1]](sys.argv[2], sys.argv[3])
+        self.dict_func[sys.argv[1]](sys.argv[2], sys.argv[3])
               
     def get_auth(self):
         self.y = yadisk.YaDisk("94885fad3a5e407b8cda5af348597aae", "59d96c74713947b9bad0f691dffb5699")
@@ -22,9 +30,9 @@ class YandexDiskOperations():
         code = input('Введите код: ')
         try:
             response = self.y.get_token(code)
-            print('n1')
+            print('Connecting')
         except yadisk.exceptions.BadRequestError:
-            print('n2')
+            print('Неверный код либо его срок жизни истек')
             sys.exit(1)
         self.y.token = response.access_token
         print('n3')
@@ -132,7 +140,7 @@ class YandexDiskOperations():
         except:
             print('Не выпонено, ошибка')
 
-    def exists(self, path, **kwargs):
+    def exists(self, path, *kwargs):
         try:
             operation = self.y.exists(path)
             if operation:
@@ -239,7 +247,8 @@ if __name__ == '__main__':
     Это приложение работает через код подтверждения.
     Для начала работы перейдите по ссылке:
     https://oauth.yandex.ru/authorize?response_type=code&client_id=94885fad3a5e407b8cda5af348597aae
-    После - создайте папку token.txt и вствьте его туда
+    (Неактивно):После - создайте папку token.txt и вствьте его туда(Неактивно)
+    (Активно)И введите код сюда(Активно)
     ''')
     # start = YandexDiskOperations()
     location = InputBox()
