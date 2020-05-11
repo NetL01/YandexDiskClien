@@ -9,26 +9,31 @@ import random
 class YandexDiskOperations():
     def __init__(self):
         self.get_auth()
-        print('yes')
+        print('n4')
+
+    def additional_func(self):
+        self.locals()[sys.argv[1]](sys.argv[2], sys.argv[3])
               
     def get_auth(self):
         self.y = yadisk.YaDisk("94885fad3a5e407b8cda5af348597aae", "59d96c74713947b9bad0f691dffb5699")
         url = self.y.get_code_url()
-        with open("data.txt", "rb") as token_txt:
-            code = token_txt
-            try:
-                response = self.y.get_token(code)
-                print('no')
-            except yadisk.exceptions.BadRequestError:
-                print('yea')
-                sys.exit(1)
-            self.y.token = response.access_token
-            print('yes')
+        # with open("data.txt", "rb") as token_txt:
+        #    code = token_txt
+        code = input('Введите код: ')
+        try:
+            response = self.y.get_token(code)
+            print('n1')
+        except yadisk.exceptions.BadRequestError:
+            print('n2')
+            sys.exit(1)
+        self.y.token = response.access_token
+        print('n3')
 
         if self.y.check_token():
             print("Токен получен")
         else:
             print("Срок жизни токена истек, либо введён не правильно")
+        
 
     def copy(self, from_path, to_path):
         try:
@@ -169,6 +174,7 @@ class YandexDiskOperations():
             print(operation)
         except:
             print('Не выполнено, ошибка')
+            
     def get_public_type(self, key, **kwargs):
         try:
             operation = self.y.get_public_type(key)
@@ -219,9 +225,14 @@ class Decription():
                 remove("dataout.txt")
 
 
+
 class InputBox():
     def __init__(self):
-        YandexDiskOperations.self.locals()[sys.argv[1]](sys.argv[2], sys.argv[3])
+        self.smth = YandexDiskOperations()
+
+    def another_func(self): 
+        self.smth.additional_func()
+
 
 if __name__ == '__main__':
     print('''
@@ -230,8 +241,9 @@ if __name__ == '__main__':
     https://oauth.yandex.ru/authorize?response_type=code&client_id=94885fad3a5e407b8cda5af348597aae
     После - создайте папку token.txt и вствьте его туда
     ''')
-    start = YandexDiskOperations()
-
+    # start = YandexDiskOperations()
+    location = InputBox()
+    location.another_func()
 
 
 
