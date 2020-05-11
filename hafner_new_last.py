@@ -1,108 +1,234 @@
 import sys
 import yadisk
 import os
+import pyAesCrypt
+from os import stat, remove
+import random
 
 
-def main():
-    token = input('Введите токен: ')
-    realize = check_auth(token)
-    if realize:
-        operations()
-    else:
-        print('Токен либо неверный, либо он больше не действителен')
-        print('Попробуйте ещё раз')
-        print('---------------------------------------------------'
-        main()
-        
-
-def operations():
-    print('''
-        Все файлы удаляются/заливаются в созданную программой папку
-        В главной директории Яндекс.Диска, которая называется YandexDiskClient
-        Команды:
-            !upload (путь)
-            - загрузить файл с вашего устройва на Яндекс.Диск
-            !download (путь на я.д) (путь на устройстве)
-            - скачать файл из яндекс диска по указанному пути
-        ''')
-              
-def create_dict_disk():
-    try:
-        y.mkdir('/YandexDiskClient')
-    except:
-        if y.exists('/YandexDiskClient'):
-            print('Папка найдена')
-          
-        else:
-            print('Папка не обнаружена либо существует')
-
-              
-
-
-
-def check_auth(token):
-    
-    
-
-def load():
-    path = input('Введите путь файла в вашей системе: ')
-    if os.exists(path):
-        print('Выбран файл: ', path.split('/')[-1])
-    else:
-        print('По вашему пути ничего не было найдено')
-        print('Повторите попытку')
-        load()
-        
-
-
-
-
-
-
-
-
-    main()
-
-def main():
-    YandexDiskOperaget_auth
-       
 class YandexDiskOperations():
     def __init__(self):
-        access = self.get_auth()
-        if access:
+        self.get_auth()
+        print('yes')
               
     def get_auth(self):
         self.y = yadisk.YaDisk("94885fad3a5e407b8cda5af348597aae", "59d96c74713947b9bad0f691dffb5699")
-        url = y.get_code_url()
+        url = self.y.get_code_url()
         with open("data.txt", "rb") as token_txt:
-              token = token_txt
-        try:
-            response = y.get_token(code)
-        except yadisk.exceptions.BadRequestError:
-            sys.exit(1)
-        y.token = response.access_token
+            code = token_txt
+            try:
+                response = self.y.get_token(code)
+                print('no')
+            except yadisk.exceptions.BadRequestError:
+                print('yea')
+                sys.exit(1)
+            self.y.token = response.access_token
+            print('yes')
 
         if self.y.check_token():
             print("Токен получен")
         else:
             print("Срок жизни токена истек, либо введён не правильно")
-            break
 
-    def
+    def copy(self, from_path, to_path):
+        try:
+            operation = self.y.copy(from_path, to_path)
+            while True:
+                status = self.y.get_operation_status(operation.href)
+                if status == "in-progress":
+                    time.sleep(5)
+                    print("Still waiting...")
+                elif status == "success":
+                    print("Success")
+                    break
+                else:
+                    print("Не выполнено, ошибка: {0}".format(status))
+                    break
+        except:
+            print('Ошибка в выполнении')
+              
+    def download(self, from_path, to_path):
+        try:
+            operation = self.y.download(from_path, to_path)
+            while True:
+                status = self.y.get_operation_status(operation.href)
+                if status == "in-progress":
+                    time.sleep(5)
+                    print("Still waiting...")
+                elif status == "success":
+                    print("Success")
+                    break
+                else:
+                    print("Не выполнено, ошибка: {0}".format(status))
+                    break
+        except:
+            print('Ошибка в выполнении')
+
+    def download_public(self, url, to_path):
+        try:
+            operation = self.y.download_public(url, to_path)
+            while True:
+                status = self.y.get_operation_status(operation.href)
+                if status == "in-progress":
+                    time.sleep(5)
+                    print("Still waiting...")
+                elif status == "success":
+                    print("Success")
+                    break
+                else:
+                    print("Не выполнено, ошибка: {0}".format(status))
+                    break
+        except:
+            print('Ошибка в выполнении')
+
+    def mkdir(self, path, **kwargs):
+        try:
+            operation = self.y.mkdir(path)
+            print('Status: success')
+        except:
+            print('Не выполнено, ошибка')
+
+    def move(self, from_path, to_path):
+        try:
+            operation = self.y.move(from_path, to_path)
+            while True:
+                status = self.y.get_operation_status(operation.href)
+                if status == "in-progress":
+                    time.sleep(5)
+                    print("Still waiting...")
+                elif status == "success":
+                    print("Success")
+                    break
+                else:
+                    print("Не выполнено, ошибка: {0}".format(status))
+                    break
+        except:
+            print('Ошибка в выполнении')
+
+
+    def listdir(self, path, **kwargs):
+        try:
+            operation = self.y.listdir(path)
+            print(operation)
+        except:
+            print('Не выполнено, ошибка')
+
+    def is_dir(self, path, **kwargs):
+        try:
+            operation = self.y.is_dir(path)
+            print(operation)
+        except:
+            print('Не выполнено, ошибка')
+
+    def is_file(self, path, **kwargs):
+        try:
+            operation = self.y.is_file(path)
+            print(operation)
+        except:
+            print('Не выпонено, ошибка')
+
+    def exists(self, path, **kwargs):
+        try:
+            operation = self.y.exists(path)
+            if operation:
+                print('Существует')
+            else:
+                print('Не существует')
+        except:
+            print('Ошибка в выполнении')
+
+    def get_disk_info(self, **kwargs):
+        print(self.y.get_disk_info())
+
+    def get_files(self, **kwargs):
+        print(self.y.get_files())
+
+    def get_last_uploaded(self, **kwargs):
+        try:
+            operation = self.y.get_last_uploaded()
+        except:
+            print('Не выполнено, ошибка')
+
+    def get_meta(self, path, **kwargs):
+        try:
+            operation = self.y.get_meta(path)
+            print(operation)
+        except:
+            print('Не выполнено, ошибка')
+
+    def get_public_meta(self, key, **kwargs):
+        try:
+            operation = self.y.get_public_meta(key)
+            print(operation)
+        except:
+            print('Не выполнено, ошибка')
+
+    def get_public_resourses(self, **kwargs):
+        try:
+            operation = self.y.get_public_meta()
+            print(operation)
+        except:
+            print('Не выполнено, ошибка')
+    def get_public_type(self, key, **kwargs):
+        try:
+            operation = self.y.get_public_type(key)
+            print(operation)
+        except:
+            print('Не выполнено, ошибка')
+
+    def get_trash_meta(self, path, **kwargs):
+        try:
+            operation = self.y.get_trash_meta(path)
+            print(operation)
+        except:
+            print('Не выпонено, ошибка')
+
+    def get_trash_type(self, path, **kwargs):
+        try:
+            operation = self.y.get_trash_type(path)
+            print(operation)
+        except:
+            print('Не выполнено, ошибка')
+
+          
 class Encription():
+    def __init__(self, from_path, to_path, **kwargs):
+        bufferSize = 64 * 1024
+        password = random.randint(1385, 9732)
+
+        print('Ваш сгенерированный пароль: ', password)
+        print('Запишите его! Иначе не сможете расшифровать файл')
+        with open(from_path, "rb") as fIn:
+            with open(to_path, "wb") as fOut:
+                pyAesCrypt.encryptStream(fIn, fOut, password, bufferSize)
+
 
 class Decription():
 
+    def __init__(self, from_path, to_path, password, **kwargs):
+        password = password
+        encFileSize = stat(from_path).st_size
+        # decrypt
+        with open("data.txt.aes", "rb") as fIn:
+            try:
+                with open("dataout.txt", "wb") as fOut:
+                    # decrypt file stream
+                    pyAesCrypt.decryptStream(fIn, fOut, password, bufferSize, encFileSize)
+            except ValueError:
+                # remove output file on error
+                remove("dataout.txt")
+
+
 class InputBox():
     def __init__(self):
-        YandexDiskOperations.self.sys_argv[1]
+        YandexDiskOperations.self.locals()[sys.argv[1]](sys.argv[2], sys.argv[3])
 
 if __name__ == '__main__':
     print('''
     Это приложение работает через код подтверждения.
     Для начала работы перейдите по ссылке:
     https://oauth.yandex.ru/authorize?response_type=code&client_id=94885fad3a5e407b8cda5af348597aae
-    После - отправьте сюда свой токен доступа
+    После - создайте папку token.txt и вствьте его туда
     ''')
     start = YandexDiskOperations()
 
